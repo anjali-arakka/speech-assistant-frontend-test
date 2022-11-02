@@ -1,12 +1,26 @@
 import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
+import {
+  ConsultationContext,
+  PatientDetails,
+} from '../../context/consultation-context'
 import ConsultationNotes from './consultation-notes'
 
 describe('Floating Button and Consultation Pad', () => {
   it('should show consultation pad when consultation pad button is clicked', async () => {
-    render(<ConsultationNotes />)
+    const mockPatientDetails: PatientDetails = null
 
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
+    render(
+      <ConsultationContext.Provider value={value}>
+        <ConsultationNotes />
+      </ConsultationContext.Provider>,
+    )
     const consultationPadButtonName = {
       name: 'Notes',
     }
@@ -22,7 +36,18 @@ describe('Floating Button and Consultation Pad', () => {
   })
 
   it('should show consultation pad button when minimize icon is clicked', async () => {
-    render(<ConsultationNotes />)
+    const mockPatientDetails: PatientDetails = null
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
+    render(
+      <ConsultationContext.Provider value={value}>
+        <ConsultationNotes />
+      </ConsultationContext.Provider>,
+    )
 
     const consultationPadButtonName = {
       name: /Notes/i,

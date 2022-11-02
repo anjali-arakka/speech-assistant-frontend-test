@@ -9,10 +9,13 @@ import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {mockConceptResponse} from '../../__mocks__/conceptResponse.mock'
 import {mockObsResponse} from '../../__mocks__/obsResponse.mock'
 import {customVisitUrl} from '../../utils/constants'
-import {mockVisitResponseWithActiveEncounter} from '../../__mocks__/activeVisitWithActiveEncounters.mock'
+
 import {mockVisitResponseWithInactiveEncounter} from '../../__mocks__/activeVisitWithInactiveEncounters.mock'
 import {ConsultationPadContents} from './consultation-pad-contents'
 import {mockVisitResponseWithNoEncounter} from '../../__mocks__/activeVisitWithNoEncounter.mock'
+import {mockVisitResponseWithActiveEncounterWithoutConsultationObs} from '../../__mocks__/activeVisitWithActiveEncountersAndWithoutConsultationObs.mock'
+import {mockVisitResponseWithActiveEncounter} from '../../__mocks__/activeVisitWithActiveEncounters.mock'
+import {updateObsResponse} from '../../__mocks__/updateObsResponse.mock'
 
 jest.mock('../../utils/socket-connection/socket-connection')
 
@@ -20,16 +23,28 @@ describe('Consultation Pad Contents', () => {
   afterEach(() => jest.clearAllMocks())
   const handleClose = jest.fn()
   const setConsultationText = jest.fn()
-  const setSavedNotes = jest.fn()
 
   it('should show the textbox, start mic and save button when consultation pad contents component is rendered', () => {
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationPadContents
-        closeConsultationPad={handleClose}
-        consultationText={''}
-        setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={''}
+          setConsultationText={setConsultationText}
+        />
+        ,
+      </ConsultationContext.Provider>,
     )
 
     expect(screen.getByRole('textbox')).toBeInTheDocument()
@@ -49,13 +64,27 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
+
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationPadContents
-        closeConsultationPad={handleClose}
-        consultationText={''}
-        setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={''}
+          setConsultationText={setConsultationText}
+        />
+        ,
+      </ConsultationContext.Provider>,
     )
 
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
@@ -80,13 +109,26 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationPadContents
-        closeConsultationPad={handleClose}
-        consultationText={''}
-        setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={''}
+          setConsultationText={setConsultationText}
+        />
+        ,
+      </ConsultationContext.Provider>,
     )
 
     const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
@@ -117,13 +159,26 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationPadContents
-        closeConsultationPad={handleClose}
-        consultationText={''}
-        setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={''}
+          setConsultationText={setConsultationText}
+        />
+        ,
+      </ConsultationContext.Provider>,
     )
 
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
@@ -162,14 +217,26 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
 
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationPadContents
-        closeConsultationPad={handleClose}
-        consultationText={'Consultation'}
-        setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={'Consultation'}
+          setConsultationText={setConsultationText}
+        />
+        , ,
+      </ConsultationContext.Provider>,
     )
 
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
@@ -208,15 +275,27 @@ describe('Consultation Pad Contents', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
-    render(
-      <ConsultationPadContents
-        closeConsultationPad={handleClose}
-        consultationText={'Consultation'}
-        setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
-      />,
-    )
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
 
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
+    render(
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={'Consultation'}
+          setConsultationText={setConsultationText}
+        />
+        , ,
+      </ConsultationContext.Provider>,
+    )
     expect(
       screen.getByRole('button', {
         name: /Save/i,
@@ -300,14 +379,18 @@ describe('Consultation Pad Contents', () => {
       locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
       isActiveVisit: true,
     }
+    const value = {
+      patientDetails: patientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
 
     render(
-      <ConsultationContext.Provider value={patientDetails}>
+      <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
           closeConsultationPad={handleClose}
           consultationText={'Consultation Notes'}
           setConsultationText={setConsultationText}
-          setSavedNotes={setSavedNotes}
         />
       </ConsultationContext.Provider>,
     )
@@ -350,13 +433,17 @@ describe('Consultation Pad Contents', () => {
       isActiveVisit: true,
     }
 
+    const value = {
+      patientDetails: patientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationContext.Provider value={patientDetails}>
+      <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
           closeConsultationPad={handleClose}
           consultationText={'Consultation Notes'}
           setConsultationText={setConsultationText}
-          setSavedNotes={setSavedNotes}
         />
       </ConsultationContext.Provider>,
     )
@@ -378,13 +465,13 @@ describe('Consultation Pad Contents', () => {
     )
   })
 
-  it('should save consultation notes when clicked on save button and active consultation encounter is present', async () => {
+  it('should save consultation notes and create new obs on click of save button when active consultation encounter is present and consultation obs is not present', async () => {
     global.fetch = jest.fn().mockImplementation()
 
     const mockFetch = global.fetch as jest.Mock
     mockFetch
       .mockResolvedValueOnce({
-        json: () => mockVisitResponseWithActiveEncounter,
+        json: () => mockVisitResponseWithActiveEncounterWithoutConsultationObs,
         ok: true,
       })
       .mockResolvedValueOnce({
@@ -396,20 +483,26 @@ describe('Consultation Pad Contents', () => {
         ok: true,
       })
 
+    const setSavedConsultationNotes = jest.fn()
     const patientDetails: PatientDetails = {
       patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
       locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
       isActiveVisit: true,
     }
+
+    const value = {
+      patientDetails: patientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: setSavedConsultationNotes,
+    }
     const consultationText = 'Consultation Notes'
 
     render(
-      <ConsultationContext.Provider value={patientDetails}>
+      <ConsultationContext.Provider value={value}>
         <ConsultationPadContents
           closeConsultationPad={handleClose}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
-          setSavedNotes={setSavedNotes}
         />
       </ConsultationContext.Provider>,
     )
@@ -437,7 +530,72 @@ describe('Consultation Pad Contents', () => {
     expect(conceptUrl).toBe('/openmrs/ws/rest/v1/concept?q="Consultation Note')
     expect(obsUrl).toBe('/openmrs/ws/rest/v1/obs')
     expect(obsJsonBody.value).toBe('Consultation Notes')
-    expect(setSavedNotes).toHaveBeenCalledWith(consultationText)
+    expect(setSavedConsultationNotes).toHaveBeenCalledWith(consultationText)
+  })
+
+  it('should save consultation notes and update the obs on click of save button when active consultation encounter and consultation obs is already present', async () => {
+    global.fetch = jest.fn().mockImplementation()
+
+    const mockFetch = global.fetch as jest.Mock
+    mockFetch
+      .mockResolvedValueOnce({
+        json: () => mockVisitResponseWithActiveEncounter,
+        ok: true,
+      })
+      .mockResolvedValue({
+        json: () => updateObsResponse,
+        ok: true,
+      })
+
+    const setSavedConsultationNotes = jest.fn()
+    const patientDetails: PatientDetails = {
+      patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
+      locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: patientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: setSavedConsultationNotes,
+    }
+    const consultationText = 'Consultation Notes'
+
+    render(
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={consultationText}
+          setConsultationText={setConsultationText}
+        />
+      </ConsultationContext.Provider>,
+    )
+
+    expect(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    ).toBeEnabled()
+
+    await userEvent.click(
+      screen.getByRole('button', {
+        name: /Save/i,
+      }),
+    )
+
+    const visiturl = mockFetch.mock.calls[0][0]
+    const updateObsUrl = mockFetch.mock.calls[1][0]
+    const obsJsonBody = JSON.parse(mockFetch.mock.calls[1][1].body)
+
+    expect(fetch).toBeCalledTimes(2)
+    expect(visiturl).toBe(
+      customVisitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
+    )
+    expect(updateObsUrl).toBe(
+      '/openmrs/ws/rest/v1/obs/8dd4d632-ec99-4056-b6dc-d489f1dc5f30',
+    )
+    expect(obsJsonBody.value).toBe('Consultation Notes')
+    expect(setSavedConsultationNotes).toHaveBeenCalledWith(consultationText)
   })
 
   it('should update the consultation notes when user is typing manually on consultation pad', () => {
@@ -452,13 +610,26 @@ describe('Consultation Pad Contents', () => {
     const setConsultationText = jest.fn()
     setConsultationText.mockImplementation(value => (consultationText = value))
 
+    const patientDetails: PatientDetails = {
+      patientUuid: 'dc9444c6-ad55-4200-b6e9-407e025eb948',
+      locationUuid: 'baf7bd38-d225-11e4-9c67-080027b662ec',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: patientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationPadContents
-        closeConsultationPad={handleClose}
-        consultationText={consultationText}
-        setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPadContents
+          closeConsultationPad={handleClose}
+          consultationText={consultationText}
+          setConsultationText={setConsultationText}
+        />
+        ,
+      </ConsultationContext.Provider>,
     )
 
     expect(

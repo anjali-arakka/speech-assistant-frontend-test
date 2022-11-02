@@ -1,5 +1,7 @@
 import {act, render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import React from 'react'
+import {mockVisitResponseWithActiveEncounter} from '../__mocks__/activeVisitWithActiveEncounters.mock'
 import {mockVisitResponse} from '../__mocks__/visitResponse.mock'
 import App from './App'
 
@@ -67,18 +69,45 @@ describe('Speech Assistant App', () => {
     expect(consultationPadButton).toBeInTheDocument()
     const visitUrl = mockFetch.mock.calls[0][0]
     expect(visitUrl).toBe(
-      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75',
+      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',
     )
   })
 
-  it('should not show consultation pad button when there is no active visits for the patient in the set location', async () => {
+  it('should show the fetched saved consultation notes in the text area when notes button is clicked', async () => {
     Object.defineProperty(window, 'location', {
       value: {
         href: testSearchUrl,
       },
     })
     Object.defineProperty(document, 'cookie', {value: testCookieWithLocationId})
-    const mockEmptyResponse = {results: []}
+    mockFetch.mockResolvedValue({
+      json: () => mockVisitResponseWithActiveEncounter,
+      ok: true,
+    })
+    render(<App />)
+    act(() => {
+      window.location.href = testUrlWithPatientId
+      window.dispatchEvent(new HashChangeEvent('hashchange'))
+    })
+
+    const consultationPadButton = await screen.findByRole('button', {
+      name: /Notes/i,
+    })
+    expect(consultationPadButton).toBeInTheDocument()
+    await userEvent.click(consultationPadButton)
+
+    expect(screen.getByRole('textbox')).toBeInTheDocument()
+    expect(screen.getByRole('textbox')).toHaveValue('Saving Notes')
+  })
+
+  it('should not show consultation pad button when there is no active visits for the patient in the set location',() => {
+    Object.defineProperty(window, 'location', {
+      value: {
+        href: testSearchUrl,
+      },
+    })
+    Object.defineProperty(document, 'cookie', {value: testCookieWithLocationId})
+    const mockEmptyResponse = {}
     mockFetch.mockResolvedValue({
       json: () => mockEmptyResponse,
       ok: true,
@@ -86,7 +115,7 @@ describe('Speech Assistant App', () => {
 
     render(<App />)
 
-    await act(() => {
+    act(() => {
       window.location.href = testUrlWithPatientId
       window.dispatchEvent(new HashChangeEvent('hashchange'))
     })
@@ -98,7 +127,7 @@ describe('Speech Assistant App', () => {
     ).not.toBeInTheDocument()
     const visitUrl = mockFetch.mock.calls[0][0]
     expect(visitUrl).toBe(
-      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75',
+      '/openmrs/ws/rest/v1/visit?includeInactive=false&patient=dbebab89-40b4-4121-a786-110e61bbc714&location=c58e12ed-3f12-11e4-adec-0800271c1b75&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)',
     )
   })
 })

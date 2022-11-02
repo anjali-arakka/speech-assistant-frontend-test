@@ -8,10 +8,20 @@ import ActiveConsultation from './active-consultation'
 
 describe('Active Consultation', () => {
   it('should not show consultation pad button when patient has no active visit', () => {
-    const mockPatientDetails: PatientDetails = null
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: false,
+    }
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
 
     render(
-      <ConsultationContext.Provider value={mockPatientDetails}>
+      <ConsultationContext.Provider value={value}>
         <ActiveConsultation />
       </ConsultationContext.Provider>,
     )
@@ -30,8 +40,13 @@ describe('Active Consultation', () => {
       isActiveVisit: true,
     }
 
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationContext.Provider value={mockPatientDetails}>
+      <ConsultationContext.Provider value={value}>
         <ActiveConsultation />
       </ConsultationContext.Provider>,
     )

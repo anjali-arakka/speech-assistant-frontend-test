@@ -1,11 +1,15 @@
-import React, {useContext} from 'react'
-import {ConsultationContext} from '../../context/consultation-context'
+import React from 'react'
+import {
+  PatientDetails,
+  usePatientDetails,
+} from '../../context/consultation-context'
 import ConsultationNotes from '../consultation-notes/consultation-notes'
 
 const checkActiveVisit = patientDetails => patientDetails?.isActiveVisit
 
 function ActiveConsultation() {
-  const patientDetails = useContext(ConsultationContext)
+  const patientDetails: PatientDetails = usePatientDetails()
+
   return (
     checkActiveVisit(patientDetails) && (
       <div id="sa-consultation">

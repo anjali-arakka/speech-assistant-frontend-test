@@ -2,6 +2,10 @@ import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
+import {
+  ConsultationContext,
+  PatientDetails,
+} from '../../context/consultation-context'
 import {ConsultationPad} from './consultation-pad'
 
 jest.mock('../../utils/socket-connection/socket-connection')
@@ -9,13 +13,26 @@ jest.mock('../../utils/socket-connection/socket-connection')
 describe('Consultation Pad', () => {
   afterEach(() => jest.clearAllMocks())
   it('should show consultation notes heading, minimize icon, start mic and save button when consultation pad component is rendered', () => {
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     render(
-      <ConsultationPad
-        setShowConsultationPad={jest.fn()}
-        consultationText={''}
-        setConsultationText={jest.fn()}
-        setSavedNotes={jest.fn()}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPad
+          setShowConsultationPad={jest.fn()}
+          consultationText={''}
+          setConsultationText={jest.fn()}
+        />
+        ,
+      </ConsultationContext.Provider>,
     )
 
     expect(screen.getByRole('heading', {name: /Consultation Notes/i}))
@@ -36,13 +53,26 @@ describe('Consultation Pad', () => {
       () => mockSocketConnection,
     )
 
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     const {unmount} = render(
-      <ConsultationPad
-        setShowConsultationPad={jest.fn()}
-        consultationText={consultationText}
-        setConsultationText={setConsultationText}
-        setSavedNotes={jest.fn()}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPad
+          setShowConsultationPad={jest.fn()}
+          consultationText={consultationText}
+          setConsultationText={setConsultationText}
+        />
+        ,
+      </ConsultationContext.Provider>,
     )
 
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock
@@ -82,13 +112,26 @@ describe('Consultation Pad', () => {
     ;(SocketConnection as jest.Mock).mockImplementation(
       () => mockSocketConnection,
     )
+    const mockPatientDetails: PatientDetails = {
+      patientUuid: 'abc',
+      locationUuid: 'def',
+      isActiveVisit: true,
+    }
+
+    const value = {
+      patientDetails: mockPatientDetails,
+      savedConsultationNotes: '',
+      setSavedConsultationNotes: jest.fn(),
+    }
     const {unmount} = render(
-      <ConsultationPad
-        setShowConsultationPad={jest.fn()}
-        consultationText={consultationText}
-        setConsultationText={setConsultationText}
-        setSavedNotes={jest.fn()}
-      />,
+      <ConsultationContext.Provider value={value}>
+        <ConsultationPad
+          setShowConsultationPad={jest.fn()}
+          consultationText={consultationText}
+          setConsultationText={setConsultationText}
+        />
+        ,
+      </ConsultationContext.Provider>,
     )
 
     const mockOnIncomingMessage = (SocketConnection as jest.Mock).mock

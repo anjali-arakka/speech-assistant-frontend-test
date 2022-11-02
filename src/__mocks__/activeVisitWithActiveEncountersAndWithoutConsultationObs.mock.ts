@@ -1,4 +1,4 @@
-export const mockVisitResponseWithActiveEncounter = {
+export const mockVisitResponseWithActiveEncounterWithoutConsultationObs = {
   results: [
     {
       uuid: '8281dd37-45c0-4a45-a939-ecb95fdb6ed7',
@@ -63,19 +63,7 @@ export const mockVisitResponseWithActiveEncounter = {
               },
             ],
           },
-          obs: [
-            {
-              uuid: '8dd4d632-ec99-4056-b6dc-d489f1dc5f30',
-              display: 'Consultation Note: Saving Notes',
-              links: [
-                {
-                  rel: 'self',
-                  uri: 'http://localhost/openmrs/ws/rest/v1/obs/8dd4d632-ec99-4056-b6dc-d489f1dc5f30',
-                  resourceAlias: 'obs',
-                },
-              ],
-            },
-          ],
+          obs: [],
           orders: [
             {
               uuid: 'e1a5fb85-43c9-4436-9e14-e1b18a50eefc',

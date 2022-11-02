@@ -1,19 +1,14 @@
 import {Button, TextArea} from '@carbon/react'
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {streamingURL} from '../../utils/constants'
 import {saveConsultationNotes} from './consultation-pad-contents.resources'
 import {
-  ConsultationContext,
   PatientDetails,
+  usePatientDetails,
+  useSavedConsultationNotes,
 } from '../../context/consultation-context'
 import {
   addSaveButtonListener,
@@ -24,12 +19,12 @@ export function ConsultationPadContents({
   closeConsultationPad,
   consultationText,
   setConsultationText,
-  setSavedNotes,
 }) {
   const [isRecording, setIsRecording] = useState(false)
   const [recordedText, setRecordedText] = useState('')
 
-  const patientDetails: PatientDetails = useContext(ConsultationContext)
+  const patientDetails: PatientDetails = usePatientDetails()
+  const {setSavedConsultationNotes} = useSavedConsultationNotes()
 
   const consultationTextRef = useRef(null)
   const recordedTextRef = useRef(null)
@@ -63,7 +58,11 @@ export function ConsultationPadContents({
       onIncomingMessage,
       onRecording,
     )
-    addSaveButtonListener(patientDetails, closeConsultationPad, setSavedNotes)
+    addSaveButtonListener(
+      patientDetails,
+      closeConsultationPad,
+      setSavedConsultationNotes,
+    )
     return () => {
       if (isRecordingRef.current) {
         if (recordedTextRef.current != '') {
@@ -151,7 +150,7 @@ export function ConsultationPadContents({
 
   const clickSaveButton = useCallback(() => {
     saveConsultationNotes(consultationText, patientDetails)
-    setSavedNotes(consultationText)
+    setSavedConsultationNotes(consultationText)
     closeConsultationPad()
   }, [consultationText])
 

@@ -1,5 +1,14 @@
 import {postApiCall, getApiCall} from '../../utils/api-utils'
-import {saveNotesUrl, conceptUrl, customVisitUrl} from '../../utils/constants'
+import {
+  saveNotesUrl,
+  conceptUrl,
+  customVisitUrl,
+  updateObsUrl,
+} from '../../utils/constants'
+import {
+  getActiveConsultationEncounter,
+  getConsultationObs,
+} from '../../utils/encounter-details/encounter-details'
 
 interface ObsType {
   person: string
@@ -28,31 +37,6 @@ const requestbody = (
   }
 }
 
-const MILLISECOND_TO_MINUTE_CONVERSION_FACTOR = 60000
-const SIXTY_MINUTES = 60
-
-const isConsultationEncounterActive = consultationEncounter => {
-  const consultationEncounterDateTime = new Date(
-    consultationEncounter.encounterDatetime,
-  )
-  const currentDatetime = new Date()
-
-  const timeDifferenceInMinutes =
-    (currentDatetime.getTime() - consultationEncounterDateTime.getTime()) /
-    MILLISECOND_TO_MINUTE_CONVERSION_FACTOR
-
-  return timeDifferenceInMinutes < SIXTY_MINUTES
-}
-
-export const getEncounters = async patientDetails => {
-  const encounters = await getApiCall(
-    customVisitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
-  )
-  return encounters?.results?.length > 0
-    ? encounters?.results[0]?.encounters
-    : null
-}
-
 export const saveObsData = async (
   consultationText,
   patientUuid,
@@ -76,21 +60,35 @@ export const saveObsData = async (
   postApiCall(saveNotesUrl, body).then(response => response.json())
 }
 
+export const updateObsData = (obsUuid, consultationText) => {
+  const body = {value: consultationText}
+  postApiCall(updateObsUrl(obsUuid), body).then(response => response.json())
+}
+
 export const saveConsultationNotes = async (
   consultationText,
   patientDetails,
 ) => {
-  const encounters = await getEncounters(patientDetails)
-  const consultationActiveEncounter = encounters?.find(
-    encounter =>
-      encounter.encounterType.display == 'Consultation' &&
-      isConsultationEncounterActive(encounter),
+  const visitResponse = await getApiCall(
+    customVisitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
   )
-  if (consultationActiveEncounter)
-    saveObsData(
-      consultationText,
-      patientDetails.patientUuid,
-      patientDetails.location,
-      consultationActiveEncounter.uuid,
-    )
+
+  const consultationActiveEncounter = await getActiveConsultationEncounter(
+    visitResponse,
+  )
+
+  if (consultationActiveEncounter) {
+    const consultationObs = getConsultationObs(consultationActiveEncounter)
+    if (consultationObs) {
+      const obsUuid = consultationObs.uuid
+      updateObsData(obsUuid, consultationText)
+    } else {
+      saveObsData(
+        consultationText,
+        patientDetails.patientUuid,
+        patientDetails.location,
+        consultationActiveEncounter.uuid,
+      )
+    }
+  }
 }
