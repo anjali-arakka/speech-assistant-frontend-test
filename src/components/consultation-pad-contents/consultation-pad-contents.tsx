@@ -155,6 +155,10 @@ export function ConsultationPadContents({
     closeConsultationPad()
   }, [consultationText])
 
+  const onDisable = () => {
+    return (consultationText === '' && recordedText === '') || isRecording
+  }
+
   return (
     <>
       {renderTextArea()}
@@ -162,7 +166,7 @@ export function ConsultationPadContents({
         {isRecording ? renderStopMic() : renderStartMic()}
         <Button
           className={styles.saveButton}
-          disabled={consultationText == '' && recordedText == ''}
+          disabled={onDisable()}
           onClick={clickSaveButton}
         >
           Save Notes

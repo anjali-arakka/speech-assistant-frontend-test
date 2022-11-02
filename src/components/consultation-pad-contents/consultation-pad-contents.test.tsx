@@ -224,6 +224,62 @@ describe('Consultation Pad Contents', () => {
     ).toBeEnabled()
   })
 
+  it('should disable save button when recording is active ', async () => {
+    const mockSocketConnection = {
+      handleStart: jest.fn(),
+      handleStop: jest.fn(),
+    }
+    ;(SocketConnection as jest.Mock).mockImplementation(
+      () => mockSocketConnection,
+    )
+    render(
+      <ConsultationPadContents
+        closeConsultationPad={handleClose}
+        consultationText={'consultationText'}
+        setConsultationText={setConsultationText}
+        setSavedNotes={setSavedNotes}
+      />,
+    )
+
+    const mockOnRecording = (SocketConnection as jest.Mock).mock.calls[0][2]
+
+    expect(SocketConnection).toHaveBeenCalled()
+
+    expect(
+      screen.getByRole('button', {
+        name: /Save Notes/i,
+      }),
+    ).toBeEnabled()
+
+    await userEvent.click(screen.getByLabelText('Start Mic'))
+
+    expect(mockSocketConnection.handleStart).toHaveBeenCalled()
+    await waitFor(() => {
+      mockOnRecording(true)
+      expect(screen.getByLabelText('Stop Mic')).toBeInTheDocument()
+    })
+    expect(
+      screen.getByRole('button', {
+        name: /Save Notes/i,
+      }),
+    ).toBeDisabled()
+
+    await userEvent.click(screen.getByLabelText('Stop Mic'))
+
+    expect(mockSocketConnection.handleStop).toHaveBeenCalled()
+
+    await waitFor(() => {
+      mockOnRecording(false)
+      expect(screen.getByLabelText('Start Mic')).toBeInTheDocument()
+    })
+
+    expect(
+      screen.getByRole('button', {
+        name: /Save Notes/i,
+      }),
+    ).toBeEnabled()
+  })
+
   it('should not save consultation notes when clicked on save button and active consultation encounter is not present', async () => {
     const mockSocketConnection = {
       handleStart: jest.fn(),
