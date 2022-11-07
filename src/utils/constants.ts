@@ -5,6 +5,8 @@ export const saveNotesUrl = '/openmrs/ws/rest/v1/obs'
 export const visitUrl = (patientId, locationId) =>
   `/openmrs/ws/rest/v1/visit?includeInactive=false&patient=${patientId}&location=${locationId}&v=custom:(uuid,visitType,startDatetime,stopDatetime,encounters)`
 export const updateObsUrl = obsUuid => `/openmrs/ws/rest/v1/obs/${obsUuid}`
+export const providerUrl = (enuuid, enprovider) =>
+  `/openmrs/ws/rest/v1/encounter/${enuuid}/encounterprovider/${enprovider}`
 export const consultationEncounterTypeUrl =
   '/openmrs/ws/rest/v1/encountertype?q=Consultation'
 export const unknownEncounterRoleUrl =

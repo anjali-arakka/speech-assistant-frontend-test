@@ -179,9 +179,15 @@ export const saveConsultationNotes = async (
   const visitResponse = await getApiCall(
     visitUrl(patientDetails.patientUuid, patientDetails.locationUuid),
   )
+  console.log('visit response before save')
+  console.log(visitResponse)
   const consultationActiveEncounter = await getActiveConsultationEncounter(
     visitResponse,
   )
+  console.log(
+    'consultationActiveEncounter from save consultation notes true or false',
+  )
+  console.log(consultationActiveEncounter)
   const visitUuid = visitResponse?.results[0]?.uuid
   const encounterDatetime = new Date().toISOString()
 
@@ -192,6 +198,8 @@ export const saveConsultationNotes = async (
       encounterDatetime,
       patientDetails,
     )
+    console.log('visit response after save')
+    console.log(visitResponse)
   } else
     createEncounterWithObs(
       encounterDatetime,
@@ -199,4 +207,5 @@ export const saveConsultationNotes = async (
       consultationText,
       patientDetails,
     )
+  console.log('createEncounterWithObs')
 }

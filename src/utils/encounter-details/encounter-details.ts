@@ -1,7 +1,24 @@
+import {
+  PatientDetails,
+  usePatientDetails,
+} from '../../context/consultation-context'
+import {getApiCall} from '../api-utils'
+import {providerUrl} from '../constants'
+
 const MILLISECOND_TO_MINUTE_CONVERSION_FACTOR = 60000
 const SIXTY_MINUTES = 60
+const patientDetails: PatientDetails = usePatientDetails()
+const getProviderUuid = async consultationEncounter => {
+  const response = await getApiCall(
+    providerUrl(
+      consultationEncounter.uuid,
+      consultationEncounter.encounterProviders[0].uuid,
+    ),
+  )
+  return response?.provider?.uuid
+}
 
-export const isConsultationEncounterActive = consultationEncounter => {
+const isConsultationEncounterActive = async consultationEncounter => {
   const consultationEncounterDateTime = new Date(
     consultationEncounter.encounterDatetime,
   )
@@ -12,6 +29,24 @@ export const isConsultationEncounterActive = consultationEncounter => {
     MILLISECOND_TO_MINUTE_CONVERSION_FACTOR
 
   return timeDifferenceInMinutes < SIXTY_MINUTES
+}
+
+const isConsultationEncounterProvider = async consultationEncounter => {
+  console.log(consultationEncounter.uuid)
+  console.log('encounterProviders uuid from isConsultationEncounterActive')
+  console.log(consultationEncounter.encounterProviders[0].uuid)
+
+  let provider = await getProviderUuid(consultationEncounter)
+  console.log('providerUuid from get provider method')
+  console.log(provider)
+  console.log('providerUuid from context')
+  console.log(patientDetails.providerUuid)
+  console.log(
+    "provider == puuid && consultationEncounter.encounterType.display == 'Consultation'",
+  )
+  console.log(provider == patientDetails.providerUuid)
+
+  return provider == patientDetails.providerUuid
 }
 
 export const getEncounters = visitResponse => {
@@ -25,8 +60,19 @@ export const getActiveConsultationEncounter = visitResponse => {
   const consultationActiveEncounter = encounters?.find(
     encounter =>
       encounter.encounterType.display == 'Consultation' &&
-      isConsultationEncounterActive(encounter),
+      isConsultationEncounterActive(encounter) &&
+      isConsultationEncounterProvider(encounter),
   )
+  // const consultationActiveProvider= encounters?.find(
+  //   encounter =>
+  //   getProviderUuid(encounter)
+  // )
+  // if(consultationActiveProvider){
+  //   return consultationActiveEncounter
+  // }
+  // else{
+  //   console.log("no provider")
+  // }
   return consultationActiveEncounter
 }
 
