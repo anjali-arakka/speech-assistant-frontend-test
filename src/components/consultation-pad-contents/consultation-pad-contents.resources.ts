@@ -188,6 +188,7 @@ export const saveConsultationNotes = async (
     'consultationActiveEncounter from save consultation notes true or false',
   )
   console.log(consultationActiveEncounter)
+  
   const visitUuid = visitResponse?.results[0]?.uuid
   const encounterDatetime = new Date().toISOString()
 

@@ -8,6 +8,7 @@ import {providerUrl} from '../constants'
 const MILLISECOND_TO_MINUTE_CONVERSION_FACTOR = 60000
 const SIXTY_MINUTES = 60
 const patientDetails: PatientDetails = usePatientDetails()
+
 const getProviderUuid = async consultationEncounter => {
   const response = await getApiCall(
     providerUrl(
@@ -31,12 +32,13 @@ const isConsultationEncounterActive = async consultationEncounter => {
   return timeDifferenceInMinutes < SIXTY_MINUTES
 }
 
-const isConsultationEncounterProvider = async consultationEncounter => {
+const isProviderSame = async consultationEncounter => {
   console.log(consultationEncounter.uuid)
   console.log('encounterProviders uuid from isConsultationEncounterActive')
   console.log(consultationEncounter.encounterProviders[0].uuid)
 
   let provider = await getProviderUuid(consultationEncounter)
+
   console.log('providerUuid from get provider method')
   console.log(provider)
   console.log('providerUuid from context')
@@ -61,18 +63,8 @@ export const getActiveConsultationEncounter = visitResponse => {
     encounter =>
       encounter.encounterType.display == 'Consultation' &&
       isConsultationEncounterActive(encounter) &&
-      isConsultationEncounterProvider(encounter),
+      isProviderSame(encounter),
   )
-  // const consultationActiveProvider= encounters?.find(
-  //   encounter =>
-  //   getProviderUuid(encounter)
-  // )
-  // if(consultationActiveProvider){
-  //   return consultationActiveEncounter
-  // }
-  // else{
-  //   console.log("no provider")
-  // }
   return consultationActiveEncounter
 }
 
