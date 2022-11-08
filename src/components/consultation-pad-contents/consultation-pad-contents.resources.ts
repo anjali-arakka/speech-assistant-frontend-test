@@ -183,12 +183,13 @@ export const saveConsultationNotes = async (
   console.log(visitResponse)
   const consultationActiveEncounter = await getActiveConsultationEncounter(
     visitResponse,
+    patientDetails.providerUuid,
   )
   console.log(
-    'consultationActiveEncounter from save consultation notes true or false',
+    'consultationActiveEncounter from save consultation notes true or false===========',
   )
   console.log(consultationActiveEncounter)
-  
+
   const visitUuid = visitResponse?.results[0]?.uuid
   const encounterDatetime = new Date().toISOString()
 
@@ -201,12 +202,13 @@ export const saveConsultationNotes = async (
     )
     console.log('visit response after save')
     console.log(visitResponse)
-  } else
+  } else {
     createEncounterWithObs(
       encounterDatetime,
       visitUuid,
       consultationText,
       patientDetails,
     )
-  console.log('createEncounterWithObs')
+    console.log('createEncounterWithObs')
+  }
 }

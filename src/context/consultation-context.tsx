@@ -57,8 +57,10 @@ function ConsultationContextProvider({children}) {
   const providerUuidRef = useRef('')
 
   const updateSavedConsultationNotes = activeVisitResponse => {
-    const consultationActiveEncounter =
-      getActiveConsultationEncounter(activeVisitResponse)
+    const consultationActiveEncounter = getActiveConsultationEncounter(
+      activeVisitResponse,
+      patientDetails.providerUuid,
+    )
 
     if (consultationActiveEncounter) {
       const consultationObs = getConsultationObs(consultationActiveEncounter)
