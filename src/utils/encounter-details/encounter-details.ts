@@ -11,6 +11,9 @@ const getProviderUuid = async consultationEncounter => {
       consultationEncounter.encounterProviders[0].uuid,
     ),
   )
+  // console.log('response?.provider?.uuid')
+  // console.log(response?.provider?.uuid)
+
   return response?.provider?.uuid
 }
 
@@ -36,7 +39,8 @@ const isProviderSame = async (consultationEncounter, puuid) => {
   console.log(provider)
   console.log('providerUuid from session ')
   console.log(puuid)
-
+  console.log('return provider == puuid')
+  console.log(provider == puuid)
   return provider == puuid
 }
 
@@ -48,7 +52,8 @@ export const getEncounters = visitResponse => {
 
 export const getActiveConsultationEncounter = (visitResponse, puuid) => {
   const encounters = getEncounters(visitResponse)
-  console.log('getActiveConsultationEncounter--1')
+
+  console.log('getActiveConsultationEncounter---------1')
   // const consultationActiveEncounter = encounters?.find(
   //   encounter =>
   //     encounter.encounterType.display == 'Consultation' &&
@@ -56,17 +61,26 @@ export const getActiveConsultationEncounter = (visitResponse, puuid) => {
   // )
   let consultationActiveEncounter = null
   encounters.forEach(async encounter => {
+    console.log('encounter in loop')
+    console.log(encounter)
     let a =
       encounter.encounterType.display == 'Consultation' &&
       isConsultationEncounterActive(encounter) &&
       (await isProviderSame(encounter, puuid))
-    console.log('a')
+    console.log('a is true if all condns.')
     console.log(a)
     if (a) {
-      console.log('inside if -2')
+      console.log('a is true,match found,inside if -2')
       consultationActiveEncounter = encounter
+      return consultationActiveEncounter
+    } else {
+      console.log('a is false')
     }
   })
+  console.log(
+    '---------------------------------------------------------------------------',
+  )
+
   return consultationActiveEncounter
 }
 
