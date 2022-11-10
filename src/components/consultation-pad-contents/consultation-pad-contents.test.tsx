@@ -18,17 +18,14 @@ jest.mock('../../utils/socket-connection/socket-connection')
 
 describe('Consultation Pad Contents', () => {
   afterEach(() => jest.clearAllMocks())
-  const handleClose = jest.fn()
   const setConsultationText = jest.fn()
   const setSavedNotes = jest.fn()
 
   it('should show the textbox, start mic and save button when consultation pad contents component is rendered', () => {
     render(
       <ConsultationPadContents
-        closeConsultationPad={handleClose}
         consultationText={''}
         setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
       />,
     )
 
@@ -51,10 +48,8 @@ describe('Consultation Pad Contents', () => {
     )
     render(
       <ConsultationPadContents
-        closeConsultationPad={handleClose}
         consultationText={''}
         setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
       />,
     )
 
@@ -82,10 +77,8 @@ describe('Consultation Pad Contents', () => {
     )
     render(
       <ConsultationPadContents
-        closeConsultationPad={handleClose}
         consultationText={''}
         setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
       />,
     )
 
@@ -119,10 +112,8 @@ describe('Consultation Pad Contents', () => {
     )
     render(
       <ConsultationPadContents
-        closeConsultationPad={handleClose}
         consultationText={''}
         setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
       />,
     )
 
@@ -165,10 +156,8 @@ describe('Consultation Pad Contents', () => {
 
     render(
       <ConsultationPadContents
-        closeConsultationPad={handleClose}
         consultationText={'Consultation'}
         setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
       />,
     )
 
@@ -210,10 +199,8 @@ describe('Consultation Pad Contents', () => {
     )
     render(
       <ConsultationPadContents
-        closeConsultationPad={handleClose}
         consultationText={'Consultation'}
         setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
       />,
     )
 
@@ -248,10 +235,8 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={patientDetails}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={'Consultation Notes'}
           setConsultationText={setConsultationText}
-          setSavedNotes={setSavedNotes}
         />
       </ConsultationContext.Provider>,
     )
@@ -297,10 +282,8 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={patientDetails}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={'Consultation Notes'}
           setConsultationText={setConsultationText}
-          setSavedNotes={setSavedNotes}
         />
       </ConsultationContext.Provider>,
     )
@@ -350,10 +333,8 @@ describe('Consultation Pad Contents', () => {
     render(
       <ConsultationContext.Provider value={patientDetails}>
         <ConsultationPadContents
-          closeConsultationPad={handleClose}
           consultationText={consultationText}
           setConsultationText={setConsultationText}
-          setSavedNotes={setSavedNotes}
         />
       </ConsultationContext.Provider>,
     )
@@ -398,10 +379,8 @@ describe('Consultation Pad Contents', () => {
 
     render(
       <ConsultationPadContents
-        closeConsultationPad={handleClose}
         consultationText={consultationText}
         setConsultationText={setConsultationText}
-        setSavedNotes={setSavedNotes}
       />,
     )
 

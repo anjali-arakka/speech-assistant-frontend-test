@@ -1,35 +1,17 @@
 import {Button, TextArea} from '@carbon/react'
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {MicrophoneFilled, StopFilled} from '@carbon/icons-react'
 import styles from './consultation-pad-contents.scss'
 import SocketConnection from '../../utils/socket-connection/socket-connection'
 import {streamingURL} from '../../utils/constants'
-import {saveConsultationNotes} from './consultation-pad-contents.resources'
-import {
-  ConsultationContext,
-  PatientDetails,
-} from '../../context/consultation-context'
-import {
-  addSaveButtonListener,
-  setConsultationNotes,
-} from '../bahmni/bahmni-save-button-listener/save-button-listener'
+import {setConsultationNotes} from '../bahmni/bahmni-save-button-listener/save-button-listener'
 
 export function ConsultationPadContents({
-  closeConsultationPad,
   consultationText,
   setConsultationText,
-  setSavedNotes,
 }) {
   const [isRecording, setIsRecording] = useState(false)
   const [recordedText, setRecordedText] = useState('')
-
-  const patientDetails: PatientDetails = useContext(ConsultationContext)
 
   const consultationTextRef = useRef(null)
   const recordedTextRef = useRef(null)
@@ -63,7 +45,6 @@ export function ConsultationPadContents({
       onIncomingMessage,
       onRecording,
     )
-    addSaveButtonListener(patientDetails, closeConsultationPad, setSavedNotes)
     return () => {
       if (isRecordingRef.current) {
         if (recordedTextRef.current != '') {
@@ -150,10 +131,8 @@ export function ConsultationPadContents({
   }
 
   const clickSaveButton = useCallback(() => {
-    saveConsultationNotes(consultationText, patientDetails)
-    setSavedNotes(consultationText)
-    closeConsultationPad()
-  }, [consultationText])
+    document.dispatchEvent(new Event('click:saveConsultationNotes'))
+  }, [])
 
   return (
     <>

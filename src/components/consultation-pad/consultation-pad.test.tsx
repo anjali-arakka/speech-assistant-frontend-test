@@ -14,7 +14,6 @@ describe('Consultation Pad', () => {
         setShowConsultationPad={jest.fn()}
         consultationText={''}
         setConsultationText={jest.fn()}
-        setSavedNotes={jest.fn()}
       />,
     )
 
@@ -41,7 +40,6 @@ describe('Consultation Pad', () => {
         setShowConsultationPad={jest.fn()}
         consultationText={consultationText}
         setConsultationText={setConsultationText}
-        setSavedNotes={jest.fn()}
       />,
     )
 
@@ -87,7 +85,6 @@ describe('Consultation Pad', () => {
         setShowConsultationPad={jest.fn()}
         consultationText={consultationText}
         setConsultationText={setConsultationText}
-        setSavedNotes={jest.fn()}
       />,
     )
 
